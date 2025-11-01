@@ -1,15 +1,29 @@
 import { Suspense } from "react";
-import { Box, Typography, Skeleton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from "@mui/material";
 import Image from "next/image";
 import CustomContainer from "@/Components/CustomContainer/CustomContainer";
 import staticConfig from "@/config/staticConfig.json";
 import { getFamousBlogs } from "@/api/actions/blogs";
+import { getSampleOrders } from "@/api/actions/orders";
 
 export default async function Home() {
   const { famousQuotesContents } = staticConfig;
   let famousBlogs = null;
+  let sampleOrders = null;
   try {
     famousBlogs = await getFamousBlogs();
+    sampleOrders = await getSampleOrders("none");
   } catch (err) {
     console.log(err);
   }
@@ -72,7 +86,7 @@ export default async function Home() {
               gap: "30px",
             }}
           >
-            {famousBlogs.map((famousBlog: any) => {
+            {famousBlogs?.map((famousBlog: any) => {
               return (
                 <Box key={famousBlog.author} textAlign="center">
                   <Suspense
@@ -114,6 +128,35 @@ export default async function Home() {
               );
             })}
           </Box>
+        </Box>
+      )}
+      {sampleOrders && (
+        <Box sx={{ marginTop: "40px", marginBottom: "40px" }}>
+          <Typography textAlign="center">Sample Orders</Typography>
+          <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Order ID</TableCell>
+                  <TableCell>Customer Id</TableCell>
+                  <TableCell>Pizza Id</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  {/* <TableCell>Price</TableCell> */}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sampleOrders?.map((order: any) => (
+                  <TableRow key={order.orderId}>
+                    <TableCell>{order.orderId}</TableCell>
+                    <TableCell>{order.customerId}</TableCell>
+                    <TableCell>{order.pizzaId}</TableCell>
+                    <TableCell>{order.quantity}</TableCell>
+                    {/* <TableCell>{order.price}</TableCell> */}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       )}
     </CustomContainer>
