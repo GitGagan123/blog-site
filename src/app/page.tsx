@@ -9,7 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
 } from "@mui/material";
 import Image from "next/image";
 import CustomContainer from "@/Components/CustomContainer/CustomContainer";
@@ -86,47 +86,48 @@ export default async function Home() {
               gap: "30px",
             }}
           >
-            {famousBlogs?.map((famousBlog: any) => {
-              return (
-                <Box key={famousBlog.author} textAlign="center">
-                  <Suspense
-                    fallback={
-                      <Skeleton
-                        sx={{ height: 300, width: 300 }}
-                        variant="rectangular"
-                        animation="pulse"
+            {famousBlogs &&
+              famousBlogs.map((famousBlog: any) => {
+                return (
+                  <Box key={famousBlog.author} textAlign="center">
+                    <Suspense
+                      fallback={
+                        <Skeleton
+                          sx={{ height: 300, width: 300 }}
+                          variant="rectangular"
+                          animation="pulse"
+                        />
+                      }
+                    >
+                      <Image
+                        alt={`${famousBlog.quote}`}
+                        src={`${famousBlog.picture}`}
+                        style={{
+                          height: 300,
+                          width: "100%",
+                        }}
+                        width={300}
+                        height={300}
                       />
-                    }
-                  >
-                    <Image
-                      alt={`${famousBlog.quote}`}
-                      src={`${famousBlog.picture}`}
-                      style={{
-                        height: 300,
+                    </Suspense>
+                    <Typography
+                      component="i"
+                      sx={{
+                        display: "block",
                         width: "100%",
+                        textAlign: "center",
+                        marginTop: "10px",
                       }}
-                      width={300}
-                      height={300}
-                    />
-                  </Suspense>
-                  <Typography
-                    component="i"
-                    sx={{
-                      display: "block",
-                      width: "100%",
-                      textAlign: "center",
-                      marginTop: "10px",
-                    }}
-                  >
-                    &quot;{famousBlog.quote}&quot;
-                  </Typography>
-                  <Typography textAlign="center">
-                    {"- "}
-                    {famousBlog.author}
-                  </Typography>
-                </Box>
-              );
-            })}
+                    >
+                      &quot;{famousBlog.quote}&quot;
+                    </Typography>
+                    <Typography textAlign="center">
+                      {"- "}
+                      {famousBlog.author}
+                    </Typography>
+                  </Box>
+                );
+              })}
           </Box>
         </Box>
       )}

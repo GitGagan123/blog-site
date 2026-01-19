@@ -9,3 +9,13 @@ export const getFamousBlogs = async () => {
     return null;
   }
 };
+
+export const submitBlogIdea = async (ideaPayload: any) => { 
+  try {
+    const response = await BlogsRepository.submitBlogIdea(ideaPayload);
+    return response.data;
+  } catch (err) {
+    console.log("Unable to Submit Blog Idea : ", err);
+    return null;
+  }
+}
