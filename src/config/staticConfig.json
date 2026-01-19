@@ -1,0 +1,22 @@
+{
+  "famousQuotesContents": [
+    {
+      "Quote": "Memories are timeless treasures of the heart.",
+      "Author": "Eudora Welty",
+      "AuthorPicture": "https://welty.mdah.ms.gov/sites/default/files/2020-02/gaining_recognition_0.jpg",
+      "alt": "eudora-welty-profile"
+    },
+    {
+      "Quote": "We do not remember days; we remember moments.",
+      "Author": "Dr. Seuss",
+      "AuthorPicture": "https://images1.penguinrandomhouse.com/author/2000585",
+      "alt": "dr-seuss-profile"
+    },
+    {
+      "Quote": "A memory is a photograph taken by the heart to make a moment last forever.",
+      "Author": "Edna St. Vincent Millay",
+      "AuthorPicture": "https://poemanalysis.com/wp-content/uploads/2020/12/Edna-St.-Vincent-Millay-Portrait.jpg",
+      "alt": "edna-st-vincent-millay-profile"
+    }
+  ]
+}

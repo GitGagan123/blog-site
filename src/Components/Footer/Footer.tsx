@@ -1,3 +1,9 @@
+import CustomContainer from "../CustomContainer/CustomContainer";
+import { FooterContent } from "../FooterContent/FooterContent";
 export default function Footer() {
-    return <div>Footer Page</div>;
+  return (
+    <CustomContainer>
+      <FooterContent />
+    </CustomContainer>
+  );
 }
