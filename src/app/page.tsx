@@ -1,16 +1,6 @@
 import { Suspense } from "react";
-import {
-  Box,
-  Typography,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+import { Box, Typography, Skeleton, Paper } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Image from "next/image";
 import CustomContainer from "@/Components/CustomContainer/CustomContainer";
 import staticConfig from "@/config/staticConfig.json";
@@ -23,20 +13,32 @@ export default async function Home() {
   let sampleOrders = null;
   try {
     famousBlogs = await getFamousBlogs();
-    sampleOrders = await getSampleOrders("none");
+    const sampleOrdersResponse = await getSampleOrders("none");
+    sampleOrders = sampleOrdersResponse?.map((order: any) => {
+      return {
+        id: order.orderId,
+        ...order,
+      };
+    });
   } catch (err) {
     console.log(err);
   }
+  const columns: GridColDef[] = [
+    { field: "orderId", headerName: "Order ID", width: 350 },
+    { field: "customerId", headerName: "Customer ID", width: 350 },
+    { field: "pizzaId", headerName: "Pizza Id", width: 350 },
+    { field: "quantity", headerName: "Quantity", width: 350 },
+  ];
+  const paginationModel = { page: 0, pageSize: 5 };
   return (
     <CustomContainer>
-      <Box sx={{ padding: "20px" }}>
+      <Box sx={{ marginTop: "20px" }}>
         <Typography textAlign="center">
           Quotes on Memories by Famous Personalities
         </Typography>
         <Box
           sx={{
             marginTop: "20px",
-            padding: "0 20px",
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
             gap: "20px",
@@ -132,33 +134,22 @@ export default async function Home() {
         </Box>
       )}
       {sampleOrders && (
-        <Box sx={{ marginTop: "40px", marginBottom: "40px" }}>
-          <Typography textAlign="center">Sample Orders</Typography>
-          <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Order ID</TableCell>
-                  <TableCell>Customer Id</TableCell>
-                  <TableCell>Pizza Id</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  {/* <TableCell>Price</TableCell> */}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sampleOrders?.map((order: any) => (
-                  <TableRow key={order.orderId}>
-                    <TableCell>{order.orderId}</TableCell>
-                    <TableCell>{order.customerId}</TableCell>
-                    <TableCell>{order.pizzaId}</TableCell>
-                    <TableCell>{order.quantity}</TableCell>
-                    {/* <TableCell>{order.price}</TableCell> */}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+        <Paper
+          sx={{
+            height: 400,
+            width: "100%",
+            border: "1px solid rgba(224, 224, 224, 1)",
+            borderRadius: "4px",
+          }}
+        >
+          <DataGrid
+            rows={sampleOrders}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[5, 10]}
+            sx={{ border: 0 }}
+          />
+        </Paper>
       )}
     </CustomContainer>
   );

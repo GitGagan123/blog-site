@@ -12,15 +12,22 @@ import CustomContainer from "../CustomContainer/CustomContainer";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { submitBlogIdea } from "@/api/endpoints/blogs";
 import { useEffect, useState } from "react";
+import { isValidEmail } from "../../utils/validators";
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
   const [blogIdea, setBlogIdea] = useState("");
+  const [IsBlogIdeaValid, setIsBlogIdeaValid] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onSubmitBlogIdea = async () => {
     setIsSubmitting(true);
-    if (!email || !blogIdea) {
+    const isValidEmailResult = isValidEmail(email);
+    setIsEmailValid(isValidEmailResult);
+    const isValidBlogIdea = blogIdea.trim().length > 0;
+    setIsBlogIdeaValid(isValidBlogIdea);
+    if (!isValidEmailResult || !isValidBlogIdea) {
       setIsSubmitting(false);
       return;
     }
@@ -43,6 +50,18 @@ export default function Footer() {
   };
   const onErrorMessageClose = () => {
     setShowErrorMessage(false);
+  };
+  const onEmailChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setEmail(e.target.value);
+    setIsEmailValid(true);
+  };
+  const onBlogIdeaChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setBlogIdea(e.target.value);
+    setIsBlogIdeaValid(true);
   };
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -90,22 +109,28 @@ export default function Footer() {
             <Box>
               <TextField
                 fullWidth
+                error={!isEmailValid}
+                helperText={
+                  !isEmailValid && "Please enter a valid email address"
+                }
                 placeholder="Your email address"
                 variant="outlined"
                 size="small"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => onEmailChange(e)}
                 sx={{ margin: "10px 0" }}
               />
             </Box>
             <Box>
               <TextField
                 fullWidth
+                error={!IsBlogIdeaValid}
+                helperText={!IsBlogIdeaValid && "Blog idea cannot be empty"}
                 placeholder="Your blog idea"
                 variant="outlined"
                 size="small"
                 value={blogIdea}
-                onChange={(e) => setBlogIdea(e.target.value)}
+                onChange={(e) => onBlogIdeaChange(e)}
                 multiline
                 maxRows={4}
                 sx={{ margin: "10px 0" }}
@@ -130,7 +155,11 @@ export default function Footer() {
           onClose={onSuccessMessageClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <Alert severity="success" variant="filled" onClose={onSuccessMessageClose}>
+          <Alert
+            severity="success"
+            variant="filled"
+            onClose={onSuccessMessageClose}
+          >
             Blog Idea Submitted Successfully
           </Alert>
         </Snackbar>
@@ -142,7 +171,11 @@ export default function Footer() {
           onClose={onErrorMessageClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          <Alert severity="error" variant="filled" onClose={onErrorMessageClose}>
+          <Alert
+            severity="error"
+            variant="filled"
+            onClose={onErrorMessageClose}
+          >
             Failed to Submit Blog Idea. Please try again.
           </Alert>
         </Snackbar>
